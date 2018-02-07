@@ -13,7 +13,7 @@ const Animation=(options)=>{
 	} = this;
 
 	let timer,
-		arr=[],
+		queue=[],
 		styles= window.getComputedStyle ? window.getComputedStyle(elm) : window.currentStyle(elm);
 
 	for(let key in actions){
@@ -26,7 +26,7 @@ const Animation=(options)=>{
 			currentStatus= isNaN(style) ? Number(styles[key].split('px')[0]) : style;
 		};
 
-		arr.push({
+		queue.push({
 			to:actions[key],
 			from:currentStatus,
 			difference:actions[key]-currentStatus,
@@ -43,15 +43,15 @@ const Animation=(options)=>{
 			let timeDifference=new Date().getTime()-startTime,
 				timeRate=timeDifference/time;
 
-			for(let i=0;i<arr.length;i++){
+			for(let i=0;i<queue.length;i++){
 
-				let type=arr[i].type,
+				let type=queue[i].type,
 					unit= isNaN( Number( styles[type] ) ) ? 'px' : '',
-					result=arr[i].from+arr[i].difference*timeRate;
+					result=queue[i].from+queue[i].difference*timeRate;
 
 				if( timeDifference >= time ){
-					type=='scrollTop' ? elm[type]=arr[i].to : elm.style[type]=arr[i].to+unit;
-					arr.splice(i,1);
+					type=='scrollTop' ? elm[type]=queue[i].to : elm.style[type]=queue[i].to+unit;
+					queue.splice(i,1);
 					continue;
 				};
 
@@ -59,7 +59,7 @@ const Animation=(options)=>{
 
 			};
 
-			if(arr.length<=0){
+			if(queue.length<=0){
 				clearTimeout(timer);
 				callback && callback();
 				return;
