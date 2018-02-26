@@ -19,7 +19,7 @@ const Animation=(options)=>{
 	for(let key in actions){
 		let currentStatus;
 
-		if(key=='scrollTop'){
+		if(key=='scrollTop' || key=='scrollLeft'){
 			currentStatus=elm[key];
 		}else{
 			let style=Number(styles[key]);
@@ -47,15 +47,16 @@ const Animation=(options)=>{
 
 				let type=queue[i].type,
 					unit= isNaN( Number( styles[type] ) ) ? 'px' : '',
-					result=queue[i].from+queue[i].difference*timeRate;
+					result=queue[i].from+queue[i].difference*timeRate,
+					isScroll=type=='scrollTop' || type=='scrollLeft';
 
 				if( timeDifference >= time ){
-					type=='scrollTop' ? elm[type]=queue[i].to : elm.style[type]=queue[i].to+unit;
+					isScroll ? elm[type]=queue[i].to : elm.style[type]=queue[i].to+unit;
 					queue.splice(i,1);
 					continue;
 				};
 
-				type=='scrollTop' ? elm[type]=result : elm.style[type]=result+unit;
+				isScroll ? elm[type]=result : elm.style[type]=result+unit;
 
 			};
 
