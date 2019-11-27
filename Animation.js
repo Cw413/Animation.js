@@ -74,6 +74,7 @@ var Animation;
 					if(timeDifference >= time) {
 						isScroll ? elm[type] = queue[i].to : elm.style[type] = queue[i].to + unit;
 						queue.splice(i, 1);
+						i --;
 						continue;
 					};
 
